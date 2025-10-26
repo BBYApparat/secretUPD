@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSPU & MBU Division</title>
+    <style>
+        :root {
+            --green: #10B981;
+            --blue: #3B82F6;
+            --yellow: #FBBF24;
+            --dark: #0F0F0F;
+            --darker: #000000;
+            --text: #FFFFFF;
+            --muted: #9CA3AF;
+            --red: #EF4444;
+            --gray: #333;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--darker);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            background: 
+                linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.92)),
+                url('https://i.ibb.co/5Xk9ggBj/New-Project-4.png') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .hero h1 {
+            font-size: 5.4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 35px rgba(0,0,0,0.9);
+            letter-spacing: 3px;
+            animation: slideDown 1s ease-out;
+        }
+        .hero p {
+            font-size: 1.75rem;
+            color: #e5e5e5;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 18px rgba(0,0,0,0.8);
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.85rem 2.4rem;
+            border: none;
+            border-radius: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin: 0.5rem;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.6s;
+        }
+        .btn:hover::before { left: 100%; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-blue { background: var(--blue); color: white; }
+        .btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 16px 32px rgba(0,0,0,0.5); }
+
+        /* GRID & CARDS */
+        .section { padding: 4rem 1rem; animation: fadeIn 1.2s ease-out; }
+        .section-alt { background: var(--dark); }
+        .container { max-width: 1200px; margin: 0 auto; flex: 1; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: #111;
+            padding: 1.9rem;
+            border-radius: 1.3rem;
+            text-align: center;
+            border: 2px solid;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+            animation: cardPop 0.6s ease-out both;
+            animation-delay: calc(0.1s * var(--i));
+        }
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border-color: #fff !important;
+        }
+        .card-hspu { border-color: var(--green); --i: 1; }
+        .card-mbu { border-color: var(--blue); --i: 2; }
+
+        /* ANIMATED PLACEHOLDER */
+        .avatar-placeholder {
+            width: 94px; height: 94px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: conic-gradient(from 0deg, #222, #444, #666, #444, #222);
+            background-size: 200% 200%;
+            animation: spin 4s linear infinite, pulse 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: white;
+            border: 3px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-placeholder::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: #111;
+            z-index: 1;
+        }
+        .avatar-placeholder span {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+        .avatar-hspu { border-color: var(--green); }
+        .avatar-mbu { border-color: var(--blue); }
+        @keyframes spin {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.9); }
+        }
+        .avatar-mbu { animation: pulse-mbu 2s ease-in-out infinite; }
+        @keyframes pulse-mbu {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(59, 130, 246, 0.9); }
+        }
+
+        /* PASSWORD GATE */
+        .gate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        .logo-svg {
+            width: 160px; height: 160px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 22px rgba(16, 185, 129, 0.75));
+            animation: logoPulse 2s ease-in-out infinite;
+        }
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 22px rgba(16, 185, 129, 0.75)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 40px rgba(16, 185, 129, 1)); }
+        }
+        .box {
+            background: linear-gradient(135deg, #111, #0A0A0A);
+            padding: 3.2rem;
+            border-radius: 1.9rem;
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid #333;
+            box-shadow: 0 0 70px rgba(16, 185, 129, 0.35);
+            text-align: center;
+            animation: boxFloat 3s ease-in-out infinite;
+        }
+        @keyframes boxFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .box h2 {
+            color: var(--green);
+            font-size: 2.1rem;
+            margin-bottom: 0.6rem;
+            text-shadow: 0 0 16px rgba(16, 185, 129, 0.7);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 16px rgba(16, 185, 129, 0.7); }
+            to { text-shadow: 0 0 25px rgba(16, 185, 129, 1); }
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 1.2rem;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 1.1rem;
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            outline: none;
+            transition: all 0.4s ease;
+        }
+        input[type="password"]:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.35);
+            background: #2a2a2a;
+            transform: scale(1.02);
+        }
+        .error {
+            color: var(--red);
+            font-size: 0.98rem;
+            margin-top: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .error.show { opacity: 1; animation: shake 0.5s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ACCESS GRANTED */
+        .access-granted {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(16, 185, 129, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            animation: granted 3s ease-out forwards;
+            text-shadow: 0 0 30px rgba(0,0,0,0.6);
+        }
+        .access-granted p {
+            font-size: 1.6rem;
+            margin-top: 1rem;
+            color: #e0f7e9;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+        @keyframes granted {
+            0% { opacity: 0; transform: scale(0.7); }
+            20% { opacity: 1; transform: scale(1.1); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.9); }
+        }
+
+        .hidden { display: none; } /* ΧΩΡΙΣ !important */
+
+        /* ANIMATIONS */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes cardPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* BACK BUTTON */
+        .back-btn {
+            display: block;
+            margin: 3.5rem auto 2.5rem;
+            padding: 1rem 2.8rem;
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            color: #bbb;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            border-radius: 0.9rem;
+            border: 1px solid #333;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+            animation: fadeInUp 1s ease-out both;
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, #222, #111);
+            color: #fff;
+            border-color: #555;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+        }
+
+        /* FILES SECTION */
+        .files-section {
+            padding: 4rem 1rem;
+            background: var(--dark);
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .files-section h2 {
+            font-size: 2.5rem;
+            color: var(--yellow);
+            margin-bottom: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+            animation: glowYellow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glowYellow {
+            from { text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+            to { text-shadow: 0 0 35px rgba(251, 191, 36, 1); }
+        }
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .file-card {
+            background: #111;
+            padding: 1.8rem;
+            border-radius: 1.3rem;
+            border: 1px solid var(--gray);
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+            text-align: center;
+            animation: cardPop 0.7s ease-out both;
+            animation-delay: calc(0.15s * var(--j));
+        }
+        .file-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 16px 35px rgba(251, 191, 36, 0.3);
+            border-color: var(--yellow);
+            background: #1a1a1a;
+        }
+        .file-card:nth-child(1) { --j: 1; }
+        .file-card:nth-child(2) { --j: 2; }
+        .file-card:nth-child(3) { --j: 3; }
+        .file-card:nth-child(4) { --j: 4; }
+
+        .download-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: var(--yellow);
+            color: #000;
+            text-decoration: none;
+            border-radius: 0.7rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: 0.4s;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+        .download-btn:hover {
+            background: #f59e0b;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.6);
+        }
+
+        /* FOOTER */
+        footer {
+            background: #0a0a0a;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #222;
+            margin-top: auto;
+            animation: fadeIn 2s ease-out;
+        }
+        footer a {
+            color: #FBBF24;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        footer a:hover {
+            color: #FCD34D;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PASSWORD GATE -->
+    <div id="gate" class="gate">
+        <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#10B981" stroke-width="4"/>
+            <path d="M75 100 L95 75 L115 100 L95 125 Z" fill="#10B981"/>
+            <circle cx="100" cy="100" r="55" fill="none" stroke="#3B82F6" stroke-width="3" stroke-dasharray="8,8"/>
+            <text x="100" y="160" text-anchor="middle" fill="#10B981" font-size="24" font-weight="bold">HSPU</text>
+        </svg>
+        <div class="box">
+            <h2>HSPU & MBU DIVISION</h2>
+            <p>Restricted Access • Enter Secure Code</p>
+            <input type="password" id="pass" placeholder="Enter Code" autocomplete="off">
+            <button class="btn btn-green" onclick="login()">ENTER SECURE ZONE</button>
+            <p id="error" class="error">Wrong Code! Try Again.</p>
+        </div>
+    </div>
+
+    <!-- ACCESS GRANTED OVERLAY -->
+    <div id="granted" class="hidden">
+        <div class="access-granted">
+            <div>ACCESS GRANTED</div>
+            <p>Secure Zone Unlocked</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main" class="hidden">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="container">
+                <h1>
+                    <span style="color: var(--green);">HSPU</span> & 
+                    <span style="color: var(--blue);">MBU</span>
+                </h1>
+                <p>High Speed Pursuit • Motorbike Unit</p>
+                <div>
+                    <button class="btn btn-green" onclick="show('all')">All Members</button>
+                    <button class="btn btn-green" onclick="show('hspu')">HSPU Only</button>
+                    <button class="btn btn-blue" onclick="show('mbu')">MBU Only</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMBERS -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2 id="title" style="text-align:center; font-size:2.6rem; margin-bottom:2rem; color:var(--green); font-weight:700;">
+                    ALL MEMBERS
+                </h2>
+                <div class="grid" id="grid">
+               <!-- HSPU MEMBERS -->
+               <div class="card card-hspu" data-unit="hspu" style="--i:1">
+                <img src="https://i.pravatar.cc/150?u=marcus" alt="Marcus Reyes" class="avatar-img avatar-hspu">
+                <h3 style="color:var(--green);">Sgt. Marcus Reyes</h3>
+                <p style="color:var(--muted);">Lead • Pursuit Commander</p>
+                 </div>
+            <div class="card card-hspu" data-unit="hspu" style="--i:2">
+             <img src="https://i.pravatar.cc/150?u=tyler" alt="Tyler Brooks" class="avatar-img avatar-hspu">
+             <h3 style="color:var(--green);">Officer Tyler Brooks</h3>
+             <p style="color:var(--muted);">PIT Maneuver Specialist</p>
+            </div>
+            <div class="card card-hspu" data-unit="hspu" style="--i:3">
+             <img src="https://i.pravatar.cc/150?u=alex" alt="Alex Kane" class="avatar-img avatar-hspu">
+             <h3 style="color:var(--green);">Officer Alex Kane</h3>
+             <p style="color:var(--muted);">Highway Interceptor</p>
+            </div>
+           <div class="card card-hspu" data-unit="hspu" style="--i:4">
+            <img src="https://i.pravatar.cc/150?u=diego" alt="Diego Ramirez" class="avatar-img avatar-hspu">
+            <h3 style="color:var(--green);">Officer Diego Ramirez</h3>
+            <p style="color:var(--muted);">Tactical Driver</p>
+            </div>
+           <div class="card card-hspu" data-unit="hspu" style="--i:5">
+            <img src="https://i.pravatar.cc/150?u=jordan" alt="Jordan Hayes" class="avatar-img avatar-hspu">
+            <h3 style="color:var(--green);">Officer Jordan Hayes</h3>
+            <p style="color:var(--muted);">Roadblock Expert</p>
+            </div>
+          <div class="card card-hspu" data-unit="hspu" style="--i:6">
+           <img src="https://i.pravatar.cc/150?u=elena" alt="Elena Voss" class="avatar-img avatar-hspu">
+           <h3 style="color:var(--green);">Officer Elena Voss</h3>
+           <p style="color:var(--muted);">Aerial Support Liaison</p>
+            </div>
+
+<!-- MBU MEMBERS -->
+<div class="card card-mbu" data-unit="mbu" style="--i:1">
+    <img src="https://i.pravatar.cc/150?u=lena" alt="Lena Chen" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Lena Chen</h3>
+    <p style="color:var(--muted);">Commander • Traffic Lead</p>
+</div>
+<div class="card card-mbu" data-unit="mbu" style="--i:2">
+    <img src="https://i.pravatar.cc/150?u=sofia" alt="Sofia Vega" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Sofia Vega</h3>
+    <p style="color:var(--muted);">Urban Patrol Specialist</p>
+</div>
+<div class="card card-mbu" data-unit="mbu" style="--i:3">
+    <img src="https://i.pravatar.cc/150?u=ryan" alt="Ryan Holt" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Ryan Holt</h3>
+    <p style="color:var(--muted);">VIP Escort & Protection</p>
+</div>
+<div class="card card-mbu" data-unit="mbu" style="--i:4">
+    <img src="https://i.pravatar.cc/150?u=minh" alt="Minh Nguyen" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Minh Nguyen</h3>
+    <p style="color:var(--muted);">Stunt & Pursuit Rider</p>
+</div>
+<div class="card card-mbu" data-unit="mbu" style="--i:5">
+    <img src="https://i.pravatar.cc/150?u=aisha" alt="Aisha Patel" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Aisha Patel</h3>
+    <p style="color:var(--muted);">Traffic Flow Analyst</p>
+</div>
+<div class="card card-mbu" data-unit="mbu" style="--i:6">
+    <img src="https://i.pravatar.cc/150?u=carlos" alt="Carlos Morales" class="avatar-img avatar-mbu">
+    <h3 style="color:var(--blue);">Officer Carlos Morales</h3>
+    <p style="color:var(--muted);">Night Shift Coordinator</p>
+</div>
+        </section>
+
+        <!-- FILES & DOCUMENTS -->
+        <section class="files-section">
+            <div class="container">
+                <h2>FILES & DOCUMENTS</h2>
+                <div class="files-grid">
+                    <div class="file-card" style="--j:1">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <h3>HSPU & MBU SOP</h3>
+                        <p>Standard Operating Procedures</p>
+                        <a href="#" class="download-btn" onclick="alert('HSPU_SOP.pdf downloaded!')">Download PDF</a>
+                    </div>
+                    <div class="file-card" style="--j:2">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <h3>Training Manual</h3>
+                        <p>Pursuit & Motorbike Tactics</p>
+                        <a href="#" class="download-btn" onclick="alert('Training_Manual.pdf downloaded!')">Download PDF</a>
+                    </div>
+                    <div class="file-card" style="--j:3">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                <text x="6" y="17" font-size="10" fill="#000" font-weight="bold">XLSX</text>
+                            </svg>
+                        </div>
+                        <h3>Current Roster</h3>
+                        <p>Active Members List</p>
+                        <a href="#" class="download-btn" onclick="alert('HSPU_MBU_Roster.xlsx downloaded!')">Download XLSX</a>
+                    </div>
+                    <div class="file-card" style="--j:4">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <h3>Vehicle Specs</h3>
+                        <p>Dodge Charger & BMW R1250</p>
+                        <a href="#" class="download-btn" onclick="alert('Vehicle_Specs.pdf downloaded!')">Download PDF</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BACK TO UPD -->
+        <a href="../index.html" class="back-btn">Back to UPD</a>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>© 2025 Secret Roleplay - UPD. All rights reserved.</p>
+            <p>Template by <a href="#" target="_blank">FourTwentyDevs</a> - <a href="#" target="_blank">CLB Designs [Heart]</a> </p>
+        </footer>
+    </div>
+
+    <script>
+        function login() {
+            const input = document.getElementById('pass').value.trim();
+            const error = document.getElementById('error');
+            const gate = document.getElementById('gate');
+            const granted = document.getElementById('granted');
+            const main = document.getElementById('main');
+
+            if (input === 'HSPU2025') {
+                granted.classList.remove('hidden');
+                setTimeout(() => {
+                    gate.classList.add('hidden');
+                    granted.classList.add('hidden');
+                    main.classList.remove('hidden');
+                    show('all');
+                }, 3000);
+            } else {
+                error.classList.add('show');
+                setTimeout(() => error.classList.remove('show'), 2500);
+                document.getElementById('pass').value = '';
+            }
+        }
+
+        document.getElementById('pass').addEventListener('keypress', e => {
+            if (e.key === 'Enter') login();
+        });
+
+        function show(unit) {
+            const cards = document.querySelectorAll('.card');
+            const title = document.getElementById('title');
+            cards.forEach(card => {
+                card.style.display = (unit === 'all' || card.dataset.unit === unit) ? 'block' : 'none';
+            });
+            title.textContent = unit === 'hspu' ? 'HSPU MEMBERS' : unit === 'mbu' ? 'MBU MEMBERS' : 'ALL MEMBERS';
+            title.style.color = unit === 'mbu' ? 'var(--blue)' : 'var(--green)';
+        }
+    </script>
+</body>
+</html>

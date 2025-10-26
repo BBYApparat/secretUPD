@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Affairs Division - Secret Roleplay UPD</title>
+
+    <!-- Fonts & CDNs -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.42/dist/lenis.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'], 'orbitron': ['Orbitron', 'sans-serif'] },
+                    colors: {
+                        linear: {
+                            black: '#000000', darker: '#0A0A0A', dark: '#111111',
+                            gray: '#1F2937', 'gray-light': '#374151', 'gray-lighter': '#4B5563',
+                            white: '#FFFFFF', accent: '#2563EB', 'accent-light': '#3B82F6',
+                            social: { blue: '#2563EB', darkblue: '#1E40AF', badge: '#E0F2FE' }
+                        }
+                    },
+                    spacing: { '18': '4.5rem', '22': '5.5rem' }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+        ::selection { background: #2563EB33; color: #fff; }
+        [data-nav] { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); }
+        [data-nav].scrolled { background: rgba(0, 0, 0, 0.98); }
+
+        .social-bg {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.6), rgba(0, 0, 0, 0.95)),
+                        url('https://i.ibb.co/4J8w8nK/social-affairs-bg.jpg') center/cover no-repeat;
+            min-height: 100vh;
+            position: relative;
+        }
+        .social-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(37,99,235,0.03) 10px, rgba(37,99,235,0.03) 20px);
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card:hover {
+            transform: translateY(-6px);
+            border-color: #60A5FA;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25);
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.2), transparent);
+            transition: 0.7s;
+        }
+        .glass-card:hover::before { left: 100%; }
+
+        .avatar-img {
+            width: 96px; height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #60A5FA;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
+        .avatar-img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(37, 99, 235, 0.7);
+            border-color: #BFDBFE;
+        }
+
+        .badge {
+            background: #E0F2FE; color: #1E40AF; font-weight: bold; font-size: 0.7rem;
+            padding: 0.25rem 0.6rem; border-radius: 6px; letter-spacing: 1px;
+        }
+
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #60A5FA;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: #60A5FA; }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(37, 99, 235, 0.8); }
+        }
+
+        /* Contact Form Styles */
+        .contact-form input, .contact-form textarea {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: #60A5FA;
+            outline: none;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+        }
+        .contact-form input:invalid, .contact-form textarea:invalid {
+            border-color: #EF4444;
+        }
+        .success-msg {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22C55E;
+            color: #22C55E;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Visitor Counter Styles */
+        .visitor-counter {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: #60A5FA;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .avatar-img { width: 80px; height: 80px; }
+            .contact-form { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body class="bg-linear-black text-linear-white font-inter antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" data-nav>
+        <div class="mx-auto px-8 py-6">
+            <div class="flex items-center justify-between">
+                <a href="../index.html" class="text-sm font-medium tracking-wide opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
+                    <i class="ri-arrow-left-s-line"></i> Back to UPD HQ
+                </a>
+                <span class="text-xs font-orbitron text-linear-social-blue">SOCIAL AFFAIRS // PUBLIC RELATIONS</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="socialContent">
+
+        <!-- Hero -->
+        <section class="social-bg flex items-center justify-center relative">
+            <div class="mx-auto px-8 py-22 max-w-5xl text-center relative z-10">
+                <h1 class="text-5xl md:text-7xl font-orbitron mb-6 leading-tight">
+                    <span class="text-linear-social-blue">SOCIAL</span><br>
+                    <span class="text-3xl md:text-4xl text-linear-white/80">AFFAIRS DIVISION</span>
+                </h1>
+                <p class="text-lg text-linear-white/70 max-w-2xl mx-auto typing-text">
+                    «Συνδέουμε την αστυνομία με την κοινότητα. Χτίζουμε εμπιστοσύνη.»
+                </p>
+            </div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-9xl font-orbitron text-linear-social-blue/5 pointer-events-none select-none">
+                SOCIAL
+            </div>
+        </section>
+
+        <!-- Mission & Vision -->
+        <section class="py-20 bg-linear-darker">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="glass-card p-8 rounded-xl" data-scroll>
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="ri-heart-3-line text-3xl text-linear-social-blue pulse-glow"></i>
+                            <h3 class="text-xl font-semibold">Η Αποστολή μας</h3>
+                        </div>
+                        <p class="text-linear-white/70 leading-relaxed">
+                            Να ενισχύσουμε τη θετική εικόνα της UPD μέσα από εκδηλώσεις, εκπαίδευση και ανοιχτή επικοινωνία με το κοινό.
+                        </p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl" data-scroll>
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="ri-eye-line text-3xl text-linear-social-blue pulse-glow"></i>
+                            <h3 class="text-xl font-semibold">Το Όραμά μας</h3>
+                        </div>
+                        <p class="text-linear-white/70 leading-relaxed">
+                            Μια πόλη όπου η αστυνομία και οι πολίτες συνεργάζονται με εμπιστοσύνη, σεβασμό και αλληλοκατανόηση.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Roster -->
+        <section class="py-20 bg-linear-black">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <h2 class="text-4xl font-orbitron text-center mb-16 text-linear-social-blue" data-scroll>
+                    <i class="ri-team-line mr-3"></i> OUR TEAM
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-6 rounded-xl text-center" data-scroll>
+                        <img src="https://i.pravatar.cc/150?u=emily" alt="Emily Harper" class="avatar-img mx-auto mb-4">
+                        <h3 class="text-lg font-medium">Emily Harper</h3>
+                        <p class="text-linear-white/70 text-sm mb-2">Director of Social Affairs</p>
+                        <div class="badge inline-block">DIRECTOR</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl text-center" data-scroll>
+                        <img src="https://i.pravatar.cc/150?u=liam" alt="Liam Chen" class="avatar-img mx-auto mb-4">
+                        <h3 class="text-lg font-medium">Liam Chen</h3>
+                        <p class="text-linear-white/70 text-sm mb-2">Community Outreach Lead</p>
+                        <div class="badge inline-block">OUTREACH</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl text-center" data-scroll>
+                        <img src="https://i.pravatar.cc/150?u=sophia" alt="Sophia Morales" class="avatar-img mx-auto mb-4">
+                        <h3 class="text-lg font-medium">Sophia Morales</h3>
+                        <p class="text-linear-white/70 text-sm mb-2">Media & PR Specialist</p>
+                        <div class="badge inline-block">MEDIA</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Events -->
+        <section class="py-20 bg-linear-darker">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <h2 class="text-4xl font-orbitron text-center mb-16 text-linear-social-blue" data-scroll>
+                    <i class="ri-calendar-event-line mr-3"></i> UPCOMING EVENTS
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass-card p-6 rounded-xl flex items-center gap-5" data-scroll>
+                        <div class="w-16 h-16 bg-linear-social-blue/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="ri-shield-user-line text-2xl text-linear-social-blue"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Police & Youth Dialogue</h3>
+                            <p class="text-sm text-linear-white/70">Nov 15, 2025 • Central Community Center</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl flex items-center gap-5" data-scroll>
+                        <div class="w-16 h-16 bg-linear-social-blue/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="ri-hand-heart-line text-2xl text-linear-social-blue"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Safety Workshop for Seniors</h3>
+                            <p class="text-sm text-linear-white/70">Dec 03, 2025 • Senior Living Hall</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="py-20 bg-linear-black">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <h2 class="text-4xl font-orbitron text-center mb-16 text-linear-social-blue" data-scroll>
+                    <i class="ri-file-download-line mr-3"></i> RESOURCES
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <a href="#" class="glass-card p-6 rounded-xl text-center group" data-scroll>
+                        <i class="ri-file-text-line text-4xl text-linear-social-blue mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-medium mb-1">Community Guide.pdf</h3>
+                        <p class="text-xs text-linear-white/60">Safety tips for residents</p>
+                    </a>
+                    <a href="#" class="glass-card p-6 rounded-xl text-center group" data-scroll>
+                        <i class="ri-file-ppt-2-line text-4xl text-green-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-medium mb-1">Youth Program.pptx</h3>
+                        <p class="text-xs text-linear-white/60">School presentation kit</p>
+                    </a>
+                    <a href="#" class="glass-card p-6 rounded-xl text-center group" data-scroll>
+                        <i class="ri-customer-service-2-line text-4xl text-orange-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-medium mb-1">Contact Card.vcf</h3>
+                        <p class="text-xs text-linear-white/60">Add us to your phone</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form Section (ΝΕΟ) -->
+        <section class="py-20 bg-linear-darker">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <h2 class="text-4xl font-orbitron text-center mb-16 text-linear-social-blue" data-scroll>
+                    <i class="ri-mail-send-line mr-3"></i> ΕΠΙΚΟΙΝΩΝΗΣΤΕ ΜΑΖΙ ΜΑΣ
+                </h2>
+                <div class="glass-card p-8 rounded-xl max-w-2xl mx-auto" data-scroll>
+                    <form id="contactForm" class="contact-form">
+                        <label for="name" class="block text-sm font-medium mb-2 text-linear-white/80">Όνομα *</label>
+                        <input type="text" id="name" name="name" required minlength="2" placeholder="Το όνομά σας">
+
+                        <label for="email" class="block text-sm font-medium mb-2 text-linear-white/80">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+
+                        <label for="message" class="block text-sm font-medium mb-2 text-linear-white/80">Μήνυμα *</label>
+                        <textarea id="message" name="message" rows="5" required minlength="10" placeholder="Περιγράψτε το αίτημά σας..."></textarea>
+
+                        <button type="submit" class="w-full py-3 bg-linear-social-blue hover:bg-linear-social-darkblue text-white font-medium rounded-lg transition-all">
+                            ΑΠΟΣΤΟΛΗ
+                        </button>
+                    </form>
+                    <div id="successMsg" class="success-msg">
+                        <i class="ri-check-line mr-2"></i> Το μήνυμά σας εστάλη επιτυχώς! Θα επικοινωνήσουμε σύντομα.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 border-t border-linear-gray-lighter text-center text-linear-white/50 text-xs relative">
+            <p>UPD SOCIAL AFFAIRS • BUILDING TRUST, ONE CONNECTION AT A TIME</p>
+            <div class="visitor-counter mt-4">
+                <i class="ri-eye-line mr-2"></i> Visitors : <span id="visitCount">0</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Live Visitor Counter (Client-side με localStorage)
+        function updateVisitorCounter() {
+            let visits = parseInt(localStorage.getItem('socialAffairsVisits') || '0') + 1;
+            localStorage.setItem('socialAffairsVisits', visits.toString());
+            const countEl = document.getElementById('visitCount');
+            gsap.fromTo(countEl, 
+                { textContent: 0 }, 
+                { textContent: visits, duration: 1, ease: "power2.out", snap: { textContent: 1 } }
+            );
+        }
+        updateVisitorCounter(); // Εκτελείται onload
+
+        // Contact Form Validation & Submit (JS μόνο)
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const successMsg = document.getElementById('successMsg');
+
+            // Simple Validation
+            if (name.length < 2) {
+                alert('Το όνομα πρέπει να έχει τουλάχιστον 2 χαρακτήρες.');
+                return;
+            }
+            if (!email.includes('@') || !email.includes('.')) {
+                alert('Παρακαλώ εισάγετε έγκυρο email.');
+                return;
+            }
+            if (message.length < 10) {
+                alert('Το μήνυμα πρέπει να έχει τουλάχιστον 10 χαρακτήρες.');
+                return;
+            }
+
+            // Αποθήκευση locally (για demo – άλλαξε σε API call για real send)
+            const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+            submissions.push({ name, email, message, date: new Date().toISOString() });
+            localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
+
+            // Εμφάνιση success
+            successMsg.style.display = 'block';
+            this.reset(); // Clear form
+            gsap.fromTo(successMsg, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 });
+        });
+
+        // Smooth scroll with Lenis
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Nav scroll effect
+        const nav = document.querySelector('[data-nav]');
+        lenis.on('scroll', ({ scroll }) => {
+            nav.classList.toggle('scrolled', scroll > 50);
+        });
+
+        // GSAP ScrollTrigger animations
+        gsap.registerPlugin(ScrollTrigger);
+        document.querySelectorAll('[data-scroll]').forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
+                y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.15
+            });
+        });
+
+        // Typing effect
+        gsap.from('.typing-text', {
+            text: "",
+            duration: 3,
+            ease: "none",
+            onUpdate: function() {
+                const text = "«Συνδέουμε την αστυνομία με την κοινότητα. Χτίζουμε εμπιστοσύνη, βήμα-βήμα.»";
+                const progress = this.progress();
+                const typed = text.substring(0, Math.round(progress * text.length));
+                document.querySelector('.typing-text').innerHTML = typed + '<span class="border-r-2 border-linear-social-blue animate-pulse">|</span>';
+            }
+        });
+
+        // Contact Form Validation & Submit (με Discord Webhook - Διορθωμένο)
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const successMsg = document.getElementById('successMsg');
+
+    // Simple Validation
+    if (name.length < 2) {
+        alert('Το όνομα πρέπει να έχει τουλάχιστον 2 χαρακτήρες.');
+        return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+        alert('Παρακαλώ εισάγετε έγκυρο email.');
+        return;
+    }
+    if (message.length < 10) {
+        alert('Το μήνυμα πρέπει να έχει τουλάχιστον 10 χαρακτήρες.');
+        return;
+    }
+
+    // Payload για Discord (όμορφο embed - εξασφαλίζουμε μη-άδειο)
+    const payload = {
+        username: 'UPD Social Affairs Bot',
+        avatar_url: 'https://i.ibb.co/4J8w8nK/social-affairs-bg.jpg',  // Άλλαξε αν θες
+        embeds: [{
+            title: '🆕 Νέο Μήνυμα Επικοινωνίας',
+            description: `Από: **${name}** (${email})\n\n**Μήνυμα:** ${message}`,  // Συνδύασα fields σε description για απλότητα
+            color: 0x2563EB,  // Μπλε
+            fields: [
+                { name: 'Όνομα', value: name || 'N/A', inline: true },
+                { name: 'Email', value: email || 'N/A', inline: true },
+                { name: 'Ημερομηνία', value: new Date().toLocaleString('el-GR'), inline: false }
+            ],
+            footer: { text: 'Secret Roleplay - UPD Social Affairs' },
+            timestamp: new Date().toISOString()
+        }]
+    };
+// Ανταλλακτικά: content fallback (για να μην είναι άδειο)
+    if (!payload.embeds || payload.embeds.length === 0) {
+        payload.content = 'Test message from UPD Form';  // Μην το σβήσεις - απαιτείται από Discord
+    }
+
+    try {
+        console.log('Αποστολή payload:', payload);  // Log για debugging
+
+        const response = await fetch('YOUR_WEBHOOK_URL_HERE', {  // <- Βάλε το webhook URL σου εδώ!
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // ΥΠΟΧΡΕΩΤΙΚΟ για JSON!
+            },
+            body: JSON.stringify(payload)
+        });
+
+        console.log('Response status:', response.status);  // Log status
+        const responseData = await response.json();  // Διάβασε error details
+        console.log('Response data:', responseData);  // Log πλήρες error
+
+        if (response.ok) {
+            // Επιτυχία
+            successMsg.style.display = 'block';
+            this.reset();
+            gsap.fromTo(successMsg, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 });
+
+            // Local storage (προαιρετικό)
+            const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+            submissions.push({ name, email, message, date: new Date().toISOString() });
+            localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
+        } else {
+            throw new Error(`Discord Error ${response.status}: ${responseData.message || 'Άγνωστο σφάλμα'}`);
+        }
+    } catch (error) {
+        console.error('Πλήρες σφάλμα:', error);  // Log στο console
+        alert(`Σφάλμα αποστολής: ${error.message}\n\nΔοκίμασε ξανά ή στείλε email στο support@upd.gr.\n(Έλεγξε console για details - F12)`);
+    }
+});
+    </script>
+</body>
+</html>
